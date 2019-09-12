@@ -130,7 +130,7 @@ def forecast_for_closest(lat, lon, lang=_DEFAULT_LANG):
     return forecast_for_station(station["id"], lang=lang)
 
 
-_TEXT_URL = "http://apis.is/weather/texts?types={0}"
+_TEXT_URL = "https://apis.is/weather/texts?types={0}"
 
 
 def forecast_text(types):
