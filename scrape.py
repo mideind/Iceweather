@@ -3,14 +3,15 @@
     Scrape coordinates of all weather stations in Iceland from vedur.is
 """
 
-from bs4 import BeautifulSoup
-import requests
 import time
 from pprint import pprint
 
+import requests
+from bs4 import BeautifulSoup
+
 STATIONS_URL = "https://www.vedur.is/vedur/stodvar"
 
-STATIONS = {}
+STATIONS = []
 
 result = requests.get(STATIONS_URL)
 
@@ -64,16 +65,18 @@ for s in samples:
     lat = float(lat.strip().replace(",", "."))
     lon = float(lon.strip().replace(",", ".")) * -1
 
-    print(lat, lon)
-
-    STATIONS[station_id] = {
+    station_info = {
+        "id": station_id,
         "name": name,
         "lat": lat,
         "lon": lon,
     }
 
-    # Let's be polite
+    STATIONS.append(station_info)
+    pprint(station_info)
+
+    # Let's be polite and give the server some breathing space
     time.sleep(0.5)
 
-
+print("-------------------")
 pprint(STATIONS)
