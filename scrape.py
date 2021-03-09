@@ -47,7 +47,7 @@ for s in samples:
     tr = td.parent
     tdloc = tr.find_all("td")[-1]
     loctxt = str(tdloc.find(text=True))
-    
+
     station_id = int(loctxt)
 
     # Coordinates
@@ -77,10 +77,3 @@ for s in samples:
 
 
 pprint(STATIONS)
-
-
-
-
-
-
-

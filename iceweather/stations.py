@@ -1,15 +1,16 @@
 """
 
-    iceweather: Look up information about Icelandic weather (observations, forecasts, 
+    iceweather: Look up information about Icelandic weather (observations, forecasts,
     human readable descriptive texts, etc.). Wrapper for apis.is weather API.
 
-    Copyright (c) 2019-2020 Miðeind ehf.
+    Copyright (c) 2019-2021 Miðeind ehf.
     Original author: Sveinbjorn Thordarson
 
 """
 
+from typing import List, Dict
 
-STATIONS = [
+STATIONS: List[Dict] = [
     {"id": 1, "lat": 64.1275, "lon": -21.9028, "name": "Reykjavík"},
     {"id": 178, "lat": 65.074, "lon": -22.7339, "name": "Stykkishólmur"},
     {"id": 195, "lat": 65.2297, "lon": -21.7543, "name": "Ásgarður"},

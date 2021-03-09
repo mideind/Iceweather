@@ -1,4 +1,5 @@
 
 TODO
 
-*
+* Add tests
+* Return station ID/info w. weather results

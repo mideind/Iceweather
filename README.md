@@ -127,7 +127,7 @@ All functions accept the `lang` keyword parameter. Supported languages are `is` 
 
 ## BSD License 
 
-Copyright (C) 2019-2020 Miðeind ehf.
+Copyright (C) 2019-2021 Miðeind ehf.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:

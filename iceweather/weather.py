@@ -1,12 +1,14 @@
 """
 
-    iceweather: Look up information about Icelandic weather (observations, forecasts, 
+    iceweather: Look up information about Icelandic weather (observations, forecasts,
     human readable descriptive texts, etc.). Wrapper for apis.is weather API.
 
-    Copyright (c) 2019-2020 Miðeind ehf.
+    Copyright (c) 2019-2021 Miðeind ehf.
     Original author: Sveinbjorn Thordarson
 
 """
+
+from typing import List, Tuple, Dict, Union
 
 import math
 import json
@@ -21,7 +23,7 @@ _DEFAULT_LANG = "is"
 _EARTH_RADIUS = 6371.0088  # Earth's radius in km
 
 
-def _distance(loc1, loc2):
+def _distance(loc1: Tuple[float], loc2: Tuple[float]) -> float:
     """
     Calculate the Haversine distance.
     Parameters
@@ -58,7 +60,7 @@ def _distance(loc1, loc2):
     return _EARTH_RADIUS * c
 
 
-def _api_call(url):
+def _api_call(url: str) -> Dict:
     """ Use requests to call the apis.is weather API """
     result = requests.get(url)
     if result.status_code != 200:
@@ -70,48 +72,48 @@ def _api_call(url):
 _OBSERVATIONS_URL = "https://apis.is/weather/observations/{0}?stations={1}"
 
 
-def observation_for_station(station_id, lang=_DEFAULT_LANG):
+def observation_for_station(station_id: int, lang: str = _DEFAULT_LANG) -> Dict:
     """
-        Returns weather observations for the given station ID. Keys
-        in the resulting dictionary are the following:
+    Returns weather observations for the given station ID. Keys
+    in the resulting dictionary are the following:
 
-        'F'   : { 'is': 'Vindhraði (m/s)',
-                  'en': 'Wind speed (m/s)'},
-        'FX'  : { 'is': 'Mesti vindhraði (m/s)',
-                  'en': 'Top wind speed (m/s)'},
-        'FG'  : { 'is': 'Mesta vindhviða (m/s)',
-                  'en': 'Top wind gust (m/s)'},
-        'D'   : { 'is': 'Vindstefna',
-                  'en': 'Wind direction'},
-        'T'   : { 'is': 'Hiti (°C)',
-                  'en': 'Air temperature (°C)'},
-        'W'   : { 'is': 'Veðurlýsing',
-                  'en': 'Weather description'},
-        'V'   : { 'is': 'Skyggni (km)',
-                  'en': 'Visibility (km)'},
-        'N'   : { 'is': 'Skýjahula (%)',
-                  'en': 'Cloud cover (%)'},
-        'P'   : { 'is': 'Loftþrýstingur (hPa)',
-                  'en': 'Air pressure'},
-        'RH'  : { 'is': 'Rakastig (%)',
-                  'en': 'Humidity (%)'},
-        'SNC' : { 'is': 'Lýsing á snjó',
-                  'en': 'Snow description'},
-        'SND' : { 'is': 'Snjódýpt',
-                  'en': 'Snow depth'},
-        'SED' : { 'is': 'Snjólag',
-                  'en': 'Snow type'},
-        'RTE' : { 'is': 'Vegahiti (°C)',
-                  'en': 'Road temperature (°C)'},
-        'TD'  : { 'is': 'Daggarmark (°C)',
-                  'en': 'Dew limit (°C)'},
-        'R'   : { 'is': 'Uppsöfnuð úrkoma (mm/klst) úr sjálfvirkum mælum',
-                  'en': 'Cumulative precipitation (mm/h) from automatic measuring units'}
+    'F'   : { 'is': 'Vindhraði (m/s)',
+              'en': 'Wind speed (m/s)'},
+    'FX'  : { 'is': 'Mesti vindhraði (m/s)',
+              'en': 'Top wind speed (m/s)'},
+    'FG'  : { 'is': 'Mesta vindhviða (m/s)',
+              'en': 'Top wind gust (m/s)'},
+    'D'   : { 'is': 'Vindstefna',
+              'en': 'Wind direction'},
+    'T'   : { 'is': 'Hiti (°C)',
+              'en': 'Air temperature (°C)'},
+    'W'   : { 'is': 'Veðurlýsing',
+              'en': 'Weather description'},
+    'V'   : { 'is': 'Skyggni (km)',
+              'en': 'Visibility (km)'},
+    'N'   : { 'is': 'Skýjahula (%)',
+              'en': 'Cloud cover (%)'},
+    'P'   : { 'is': 'Loftþrýstingur (hPa)',
+              'en': 'Air pressure'},
+    'RH'  : { 'is': 'Rakastig (%)',
+              'en': 'Humidity (%)'},
+    'SNC' : { 'is': 'Lýsing á snjó',
+              'en': 'Snow description'},
+    'SND' : { 'is': 'Snjódýpt',
+              'en': 'Snow depth'},
+    'SED' : { 'is': 'Snjólag',
+              'en': 'Snow type'},
+    'RTE' : { 'is': 'Vegahiti (°C)',
+              'en': 'Road temperature (°C)'},
+    'TD'  : { 'is': 'Daggarmark (°C)',
+              'en': 'Dew limit (°C)'},
+    'R'   : { 'is': 'Uppsöfnuð úrkoma (mm/klst) úr sjálfvirkum mælum',
+              'en': 'Cumulative precipitation (mm/h) from automatic measuring units'}
     """
     return _api_call(_OBSERVATIONS_URL.format(lang, station_id))
 
 
-def observation_for_closest(lat, lon, lang=_DEFAULT_LANG):
+def observation_for_closest(lat: float, lon: float, lang: str = _DEFAULT_LANG) -> Dict:
     """ Returns weather observation from closest weather station given coordinates """
     station = closest_station(lat, lon)
     return observation_for_station(station["id"], lang=lang)
@@ -120,12 +122,12 @@ def observation_for_closest(lat, lon, lang=_DEFAULT_LANG):
 _FORECASTS_URL = "https://apis.is/weather/forecasts/{0}?stations={1}"
 
 
-def forecast_for_station(station_id, lang=_DEFAULT_LANG):
+def forecast_for_station(station_id: int, lang: str = _DEFAULT_LANG) -> Dict:
     """ Returns weather forecast from a given weather station """
     return _api_call(_FORECASTS_URL.format(lang, station_id))
 
 
-def forecast_for_closest(lat, lon, lang=_DEFAULT_LANG):
+def forecast_for_closest(lat: float, lon: float, lang=_DEFAULT_LANG) -> Dict:
     """ Returns weather forecast from closest weather station given coordinates """
     station = closest_station(lat, lon)
     return forecast_for_station(station["id"], lang=lang)
@@ -134,34 +136,34 @@ def forecast_for_closest(lat, lon, lang=_DEFAULT_LANG):
 _TEXT_URL = "https://apis.is/weather/texts?types={0}"
 
 
-def forecast_text(types):
+def forecast_text(types: Union[int, List[int]]) -> Dict:
     """
-        Request a descriptive text from the weather API.
+    Request a descriptive text from the weather API.
 
-        Text types:
+    Text types:
 
-        "2" = "Veðurhorfur á landinu"
-        "3" = "Veðurhorfur á höfuðborgarsvæðinu"
-        "5" = "Veðurhorfur á landinu næstu daga"
-        "6" = "Veðurhorfur á landinu næstu daga"
-        "7" = "Weather outlook"
-        "9" = "Veðuryfirlit"
-        "10" = "Veðurlýsing"
-        "11" = "Íslenskar viðvaranir fyrir land"
-        "12" = "Veðurhorfur á landinu"
-        "14" = "Enskar viðvaranir fyrir land"
-        "27" = "Weather forecast for the next several days"
-        "30" = "Miðhálendið"
-        "31" = "Suðurland"
-        "32" = "Faxaflói"
-        "33" = "Breiðafjörður"
-        "34" = "Vestfirðir"
-        "35" = "Strandir og Norðurland vestra"
-        "36" = "Norðurlandi eystra"
-        "37" = "Austurland að Glettingi"
-        "38" = "Austfirðir"
-        "39" = "Suðausturland"
-        "42" = "General synopsis
+    "2" = "Veðurhorfur á landinu"
+    "3" = "Veðurhorfur á höfuðborgarsvæðinu"
+    "5" = "Veðurhorfur á landinu næstu daga"
+    "6" = "Veðurhorfur á landinu næstu daga"
+    "7" = "Weather outlook"
+    "9" = "Veðuryfirlit"
+    "10" = "Veðurlýsing"
+    "11" = "Íslenskar viðvaranir fyrir land"
+    "12" = "Veðurhorfur á landinu"
+    "14" = "Enskar viðvaranir fyrir land"
+    "27" = "Weather forecast for the next several days"
+    "30" = "Miðhálendið"
+    "31" = "Suðurland"
+    "32" = "Faxaflói"
+    "33" = "Breiðafjörður"
+    "34" = "Vestfirðir"
+    "35" = "Strandir og Norðurland vestra"
+    "36" = "Norðurlandi eystra"
+    "37" = "Austurland að Glettingi"
+    "38" = "Austfirðir"
+    "39" = "Suðausturland"
+    "42" = "General synopsis
     """
     if type(types) is list:
         t = [str(x) for x in types]
@@ -170,29 +172,29 @@ def forecast_text(types):
     return _api_call(_TEXT_URL.format(",".join(t)))
 
 
-def station_list():
-    """ Return a list of all weather stations in Iceland """
+def station_list() -> List[Dict]:
+    """ Return a list of all weather stations in Iceland. """
     return STATIONS
 
 
-def closest_station(lat, lon):
+def closest_station(lat: float, lon: float, limit: int = 1) -> List[Dict]:
     """ Find the weather station closest to the given location. """
     dist_sorted = sorted(
         STATIONS, key=lambda s: _distance((lat, lon), (s["lat"], s["lon"]))
     )
 
-    return dist_sorted[0]
+    return dist_sorted[:limit]
 
 
-def id_for_station(station_name):
-    """ Return the numerical ID for a weather station, given its name """
+def id_for_station(station_name: str) -> int:
+    """ Return the numerical ID for a weather station, given its name. """
     for s in STATIONS:
         if s["name"] == station_name:
             return s
 
 
-def station_for_id(station_id):
-    """ Return the name of a weather station, given its numerical ID """
+def station_for_id(station_id: int) -> Dict:
+    """ Return the name of a weather station, given its numerical ID. """
     for s in STATIONS:
         if s["id"] == station_id:
             return s
