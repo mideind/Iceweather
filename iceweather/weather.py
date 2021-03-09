@@ -10,7 +10,7 @@
 
 """
 
-from typing import List, Tuple, Dict, Union
+from typing import List, Tuple, Dict, Union, Optional
 
 import math
 import json
@@ -25,7 +25,7 @@ _DEFAULT_LANG = "is"
 _EARTH_RADIUS = 6371.0088  # Earth's radius in km
 
 
-def _distance(loc1: Tuple[float], loc2: Tuple[float]) -> float:
+def _distance(loc1: Tuple[float, float], loc2: Tuple[float, float]) -> float:
     """
     Calculate the Haversine distance.
     Parameters
@@ -47,8 +47,8 @@ def _distance(loc1: Tuple[float], loc2: Tuple[float]) -> float:
     https://stackoverflow.com/questions/19412462
         /getting-distance-between-two-points-based-on-latitude-longitude
     """
-    lat1, lon1 = loc1
-    lat2, lon2 = loc2
+    (lat1, lon1) = loc1
+    (lat2, lon2) = loc2
 
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
@@ -63,7 +63,7 @@ def _distance(loc1: Tuple[float], loc2: Tuple[float]) -> float:
 
 
 def _api_call(url: str) -> Dict:
-    """ Use requests to call the apis.is weather API """
+    """ Use requests to call the apis.is weather API. """
     result = requests.get(url)
     if result.status_code != 200:
         raise RequestException("API status code not 200 OK for URL: {0}".format(url))
@@ -76,8 +76,8 @@ _OBSERVATIONS_URL = "https://apis.is/weather/observations/{0}?stations={1}"
 
 def observation_for_station(station_id: int, lang: str = _DEFAULT_LANG) -> Dict:
     """
-    Returns weather observations for the given station ID. Keys
-    in the resulting dictionary are the following:
+    Returns weather observations for the given station ID.
+    Keys in the resulting dictionary are the following:
 
     'F'   : { 'is': 'Vindhraði (m/s)',
               'en': 'Wind speed (m/s)'},
@@ -115,24 +115,24 @@ def observation_for_station(station_id: int, lang: str = _DEFAULT_LANG) -> Dict:
     return _api_call(_OBSERVATIONS_URL.format(lang, station_id))
 
 
-def observation_for_closest(lat: float, lon: float, lang: str = _DEFAULT_LANG) -> Dict:
-    """ Returns weather observation from closest weather station given coordinates """
-    station = closest_station(lat, lon)
-    return observation_for_station(station["id"], lang=lang)
+def observation_for_closest(lat: float, lon: float, lang: str = _DEFAULT_LANG) -> Tuple[Dict, Dict]:
+    """ Returns weather observation from closest weather station given coordinates. """
+    station = closest_stations(lat, lon)[0]
+    return observation_for_station(station["id"], lang=lang), station
 
 
 _FORECASTS_URL = "https://apis.is/weather/forecasts/{0}?stations={1}"
 
 
 def forecast_for_station(station_id: int, lang: str = _DEFAULT_LANG) -> Dict:
-    """ Returns weather forecast from a given weather station """
+    """ Returns weather forecast from a given weather station. """
     return _api_call(_FORECASTS_URL.format(lang, station_id))
 
 
-def forecast_for_closest(lat: float, lon: float, lang=_DEFAULT_LANG) -> Dict:
-    """ Returns weather forecast from closest weather station given coordinates """
-    station = closest_station(lat, lon)
-    return forecast_for_station(station["id"], lang=lang)
+def forecast_for_closest(lat: float, lon: float, lang=_DEFAULT_LANG) -> Tuple[Dict, Dict]:
+    """ Returns weather forecast from closest weather station given coordinates. """
+    station = closest_stations(lat, lon)[0]
+    return forecast_for_station(station["id"], lang=lang), station
 
 
 _TEXT_URL = "https://apis.is/weather/texts?types={0}"
@@ -168,7 +168,7 @@ def forecast_text(types: Union[int, List[int]]) -> Dict:
     "42" = "General synopsis
     """
     if type(types) is list:
-        t = [str(x) for x in types]
+        t = [str(x) for x in types]  # type: ignore
     else:
         t = [str(types)]
     return _api_call(_TEXT_URL.format(",".join(t)))
@@ -179,7 +179,7 @@ def station_list() -> List[Dict]:
     return STATIONS
 
 
-def closest_station(lat: float, lon: float, limit: int = 1) -> List[Dict]:
+def closest_stations(lat: float, lon: float, limit: int = 1) -> List[Dict]:
     """ Find the weather station closest to the given location. """
     dist_sorted = sorted(
         STATIONS, key=lambda s: _distance((lat, lon), (s["lat"], s["lon"]))
@@ -188,15 +188,17 @@ def closest_station(lat: float, lon: float, limit: int = 1) -> List[Dict]:
     return dist_sorted[:limit]
 
 
-def id_for_station(station_name: str) -> int:
+def id_for_station(station_name: str) -> Optional[int]:
     """ Return the numerical ID for a weather station, given its name. """
     for s in STATIONS:
         if s["name"] == station_name:
-            return s
+            return s["id"]
+    return None
 
 
-def station_for_id(station_id: int) -> Dict:
+def station_for_id(station_id: int) -> Optional[Dict]:
     """ Return the name of a weather station, given its numerical ID. """
     for s in STATIONS:
         if s["id"] == station_id:
             return s
+    return None
