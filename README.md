@@ -1,6 +1,7 @@
 # iceweather
 
-Python 3 package for obtaining Icelandic weather information and forecasts from the [Icelandic Met Office](https://en.vedur.is/). Uses [apis.is](https://apis.is) gateway.
+`ìceweather` is a Python 3 package for obtaining Icelandic weather information and forecasts from
+the [Icelandic Met Office](https://en.vedur.is/). Uses the [apis.is](https://apis.is) gateway.
 
 ## Installation
 
