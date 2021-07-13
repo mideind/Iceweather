@@ -69,15 +69,16 @@ _ArgType = Union[int, str, Iterable[Union[int, str]]]
 def _arg_to_str_list(arg: _ArgType) -> List[str]:
     """Helper function, converts argument to a list of strings."""
     t: List[str]
-    if isinstance(arg, str) or isinstance(arg, int):
+    if isinstance(arg, (int, str)):
         t = [str(arg)]
-    elif isinstance(arg, Iterable):
-        t = [str(i) for i in arg]
     else:
-        raise TypeError(
-            "Argument should be of type int, "
-            f"str or Iterable[int/str], not {type(arg)}."
-        )
+        try:
+            t = [str(i) for i in arg]
+        except Exception as e:
+            raise TypeError(
+                "Argument should be of type int, "
+                f"str or Iterable[int/str], not {type(arg)}."
+            )
     return t
 
 

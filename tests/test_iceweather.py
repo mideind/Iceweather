@@ -34,34 +34,124 @@ def test_iceweather():
 
 
 def test_observation_for_station():
-    # TODO: Implement tests here
-    pass
+    """Test observation_for_station."""
+
+    def _check_observation(stations, lang="is"):
+        obs = observation_for_station(stations, lang)
+        assert (
+            "results" in obs
+            and isinstance(obs["results"], list)
+            and len(obs["results"]) > 0
+        )
+        for station in obs["results"]:
+            assert "id" in station and isinstance(station["id"], str)
+            if isinstance(stations, (int, str)):
+                assert station["id"] == stations or int(station["id"]) == stations
+            else:
+                assert station["id"] in stations or int(station["id"]) in stations
+            assert "valid" in station and isinstance(station["valid"], str)
+            assert "name" in station and isinstance(station["name"], str)
+            assert "time" in station and isinstance(station["time"], str)
+            assert "err" in station and isinstance(station["err"], str)
+            assert "link" in station and isinstance(station["link"], str)
+            assert "F" in station and isinstance(station["F"], str)
+            assert "FX" in station and isinstance(station["FX"], str)
+            assert "FG" in station and isinstance(station["FG"], str)
+            assert "D" in station and isinstance(station["D"], str)
+            assert "T" in station and isinstance(station["T"], str)
+            assert "W" in station and isinstance(station["W"], str)
+            assert "V" in station and isinstance(station["V"], str)
+            assert "N" in station and isinstance(station["N"], str)
+            assert "P" in station and isinstance(station["P"], str)
+            assert "RH" in station and isinstance(station["RH"], str)
+            assert "SNC" in station and isinstance(station["SNC"], str)
+            assert "SND" in station and isinstance(station["SND"], str)
+            assert "SED" in station and isinstance(station["SED"], str)
+            assert "RTE" in station and isinstance(station["RTE"], str)
+            assert "TD" in station and isinstance(station["TD"], str)
+            assert "R" in station and isinstance(station["R"], str)
+
+    _check_observation("1")
+    _check_observation(1)
+    _check_observation((1, 178, "422"))
+    _check_observation(("422", "400"))
+    _check_observation((422, 400))
+
+    _check_observation("1", "en")
+    _check_observation(1, "en")
+    _check_observation((1, "178", 422), "en")
+    _check_observation(("422", "400"), "en")
+    _check_observation((422, 400), "en")
 
 
 def test_forecast_for_station():
-    # TODO: Implement tests here
-    pass
+    """Test forecast_for_station."""
+
+    def _check_forecast(stations, lang="is"):
+        forc = forecast_for_station(stations, lang)
+        assert (
+            "results" in forc
+            and isinstance(forc["results"], list)
+            and len(forc["results"]) > 0
+        )
+        for station in forc["results"]:
+            assert "id" in station and isinstance(station["id"], str)
+            if isinstance(stations, (int, str)):
+                assert station["id"] == str(stations)
+            else:
+                assert station["id"] in stations or int(station["id"]) in stations
+            assert "valid" in station and isinstance(station["valid"], str)
+            assert "name" in station and isinstance(station["name"], str)
+            assert "err" in station and isinstance(station["err"], str)
+            assert "link" in station and isinstance(station["link"], str)
+            assert "atime" in station and isinstance(station["atime"], str)
+            assert (
+                "forecast" in station
+                and isinstance(station["forecast"], list)
+                and len(station["forecast"]) >= 0
+            )
+            for forc in station["forecast"]:
+                assert "D" in forc and isinstance(forc["D"], str)
+                assert "F" in forc and isinstance(forc["F"], str)
+                assert "N" in forc and isinstance(forc["N"], str)
+                assert "R" in forc and isinstance(forc["R"], str)
+                assert "T" in forc and isinstance(forc["T"], str)
+                assert "TD" in forc and isinstance(forc["TD"], str)
+                assert "W" in forc and isinstance(forc["W"], str)
+                assert "ftime" in forc and isinstance(forc["ftime"], str)
+
+    _check_forecast("1")
+    _check_forecast(1)
+    _check_forecast((1, 178, "422"))
+    _check_forecast(("422", "400"))
+    _check_forecast((422, 400))
+
+    _check_forecast("1", "en")
+    _check_forecast(1, "en")
+    _check_forecast((1, "178", 422), "en")
+    _check_forecast(("422", "400"), "en")
+    _check_forecast((422, 400), "en")
 
 
 def test_forecast_text():
     """Test descriptive text endpoint."""
 
-    def _test_forc_text(types: tuple) -> None:
-        results = forecast_text(types)
+    def _check_forc_text(types):
+        forc_text = forecast_text(types)
         assert (
-            "results" in results
-            and isinstance(results["results"], list)
-            and len(results["results"]) > 0
+            "results" in forc_text
+            and isinstance(forc_text["results"], list)
+            and len(forc_text["results"]) > 0
         )
 
-        for text in results["results"]:
+        for text in forc_text["results"]:
             assert "title" in text and isinstance(text["title"], str)
             assert "creation" in text and isinstance(text["creation"], str)
             assert "valid_from" in text and isinstance(text["valid_from"], str)
             assert "valid_to" in text and isinstance(text["valid_to"], str)
             assert "content" in text and isinstance(text["content"], str)
             assert "id" in text and isinstance(text["id"], str)
-            if isinstance(types, int) or isinstance(types, str):
+            if isinstance(types, (int, str)):
                 assert text["id"] == types
             else:
                 assert text["id"] in types
@@ -91,11 +181,11 @@ def test_forecast_text():
         "42": "General synopsis",
     }
 
-    for t in all_types.keys():
-        _test_forc_text(t)
+    for t in all_types:
+        _check_forc_text(t)
 
-    _test_forc_text(("2", "3", "5", "6"))
-    _test_forc_text(("2", "37", "31", "42"))
+    _check_forc_text(("2", "3", "5", "6"))
+    _check_forc_text(("2", "37", "31", "42"))
 
 
 def test_closest_stations():
