@@ -72,13 +72,7 @@ def _arg_to_str_list(arg: _ArgType) -> List[str]:
     if isinstance(arg, (int, str)):
         t = [str(arg)]
     else:
-        try:
-            t = [str(i) for i in arg]
-        except Exception as e:
-            raise TypeError(
-                "Argument should be of type int, "
-                f"str or Iterable[int/str], not {type(arg)}."
-            )
+        t = [str(i) for i in arg]
     return t
 
 
