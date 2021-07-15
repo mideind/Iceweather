@@ -1,7 +1,7 @@
 # iceweather
 
 `ìceweather` is a Python 3.6+ package for obtaining Icelandic weather information and forecasts from
-the [Icelandic Met Office](https://en.vedur.is/). Uses the [apis.is](https://apis.is) gateway.
+the [Icelandic Met Office](https://en.vedur.is/). Uses the xmlweather API ([documentation in Icelandic](https://vedur.is/um-vi/vefurinn/xml/)).
 
 ## Installation
 
@@ -126,7 +126,7 @@ All functions accept the `lang` keyword parameter. Supported languages are `is` 
 
 0.1 - Initial release (12/09/2019)
 
-## BSD License 
+## BSD License
 
 Copyright (C) 2019-2021 Miðeind ehf.
 
