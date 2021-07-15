@@ -6,6 +6,8 @@
     Copyright (c) 2019-2021 Miðeind ehf.
     Original author: Sveinbjorn Thordarson
 
+    BSD 3-clause License (see License.txt).
+
 """
 
 from .weather import *
