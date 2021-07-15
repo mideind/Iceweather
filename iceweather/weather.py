@@ -95,9 +95,9 @@ _OBSERVATIONS_URL: str = (
 )
 
 
-def observation_for_station(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> dict:
+def observation_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> dict:
     """
-    Returns weather observations for the given station ID/IDs.
+    Returns weather observations for the given station IDs.
     Keys in the resulting dictionary are the following:
 
     'F'   : { 'is': 'Vindhraði (m/s)',
@@ -148,6 +148,17 @@ def observation_for_station(station_ids: _ArgType, lang: str = _DEFAULT_LANG) ->
     return ret_data
 
 
+def observation_for_station(
+    station_id: Union[str, int], lang: str = _DEFAULT_LANG
+) -> dict:
+    """
+    Returns weather observations for the given station ID.
+    Wrapper for observation_for_stations.
+    """
+    assert isinstance(station_id, (str, int))
+    return observation_for_stations(station_id, lang)
+
+
 def observation_for_closest(
     lat: float, lon: float, lang: str = _DEFAULT_LANG
 ) -> Tuple[dict, dict]:
@@ -162,8 +173,8 @@ _FORECASTS_URL: str = (
 )
 
 
-def forecast_for_station(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> Dict:
-    """Returns weather forecast from given weather station/s."""
+def forecast_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> Dict:
+    """Returns weather forecast from given weather station IDs."""
 
     ids = _arg_to_str_list(station_ids)
     x_tree = _api_call(_FORECASTS_URL.format(lang, ";".join(ids)))
@@ -190,6 +201,17 @@ def forecast_for_station(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> Di
     return ret_data
 
 
+def forecast_for_station(
+    station_id: Union[str, int], lang: str = _DEFAULT_LANG
+) -> Dict:
+    """
+    Returns weather forecast from given weather station ID.
+    Wrapper for forecast_for_stations.
+    """
+    assert isinstance(station_id, (str, int))
+    return forecast_for_stations(station_id, lang)
+
+
 def forecast_for_closest(
     lat: float, lon: float, lang=_DEFAULT_LANG
 ) -> Tuple[Dict, Dict]:
@@ -201,7 +223,7 @@ def forecast_for_closest(
 _TEXT_URL = "https://xmlweather.vedur.is?op_w=xml&type=txt&lang=is&view=xml&ids={0}"
 
 
-def forecast_text(types: Union[int, Iterable[int]]) -> Dict:
+def forecast_text(types: _ArgType) -> Dict:
     """
     Request a descriptive text from the weather API.
 

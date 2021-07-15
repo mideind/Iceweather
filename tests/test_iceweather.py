@@ -37,7 +37,7 @@ def test_observation_for_station():
     """Test observation_for_station."""
 
     def _check_observation(stations, lang="is"):
-        obs = observation_for_station(stations, lang)
+        obs = observation_for_stations(stations, lang)
         assert (
             "results" in obs
             and isinstance(obs["results"], list)
@@ -83,12 +83,15 @@ def test_observation_for_station():
     _check_observation(("422", "400"), "en")
     _check_observation((422, 400), "en")
 
+    assert observation_for_stations(422) == observation_for_station(422)
+    assert observation_for_stations("178", "en") == observation_for_station("178", "en")
+
 
 def test_forecast_for_station():
     """Test forecast_for_station."""
 
     def _check_forecast(stations, lang="is"):
-        forc = forecast_for_station(stations, lang)
+        forc = forecast_for_stations(stations, lang)
         assert (
             "results" in forc
             and isinstance(forc["results"], list)
@@ -131,6 +134,9 @@ def test_forecast_for_station():
     _check_forecast((1, "178", 422), "en")
     _check_forecast(("422", "400"), "en")
     _check_forecast((422, 400), "en")
+
+    assert forecast_for_stations(422) == forecast_for_station(422)
+    assert forecast_for_stations("178", "en") == forecast_for_station("178", "en")
 
 
 def test_forecast_text():
