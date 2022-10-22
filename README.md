@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
 [![Release](https://shields.io/github/v/release/mideind/iceweather?display_name=tag)]()
+[![PyPI](https://img.shields.io/pypi/v/iceweather)]()
 [![Build](https://github.com/mideind/iceweather/actions/workflows/python-package.yml/badge.svg)]()
 
 `ìceweather` is a Python 3.6+ package for obtaining Icelandic weather information and forecasts from
