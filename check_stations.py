@@ -7,6 +7,7 @@ from iceweather import observation_for_station
 
 for s in STATIONS:
     print("Checking {0}: {1}".format(s["id"], s["name"]))
+    d = None
     try:
         d = observation_for_station(s["id"])
     except Exception as e:
