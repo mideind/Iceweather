@@ -1,5 +1,3 @@
+TODO for iceweather
 
-TODO
-
-* Add tests
 * Return station ID/info w. weather results

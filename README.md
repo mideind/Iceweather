@@ -6,13 +6,13 @@
 [![PyPI](https://img.shields.io/pypi/v/iceweather)]()
 [![Build](https://github.com/mideind/iceweather/actions/workflows/python-package.yml/badge.svg)]()
 
-`ìceweather` is a Python 3.6+ package for obtaining Icelandic weather information and forecasts from
+`ìceweather` is a Python 3.7+ package for obtaining Icelandic weather information and forecasts from
 the [Icelandic Met Office](https://en.vedur.is/) (*Veðurstofan*). Uses the xmlweather API ([documentation in Icelandic](https://vedur.is/um-vi/vefurinn/xml/)).
 
 ## Installation
 
-```
-$ pip install iceweather
+```sh
+pip install iceweather
 ```
 
 ## Examples
@@ -99,7 +99,7 @@ Request a descriptive text from the weather API:
               'valid_to': '2019-09-14 00:00:00'}]}
 ```
 
-```
+```text
 Text types:
 
     "2" = "Veðurhorfur á landinu"
@@ -162,4 +162,3 @@ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-
