@@ -4,9 +4,8 @@
     human readable descriptive texts, etc.) using vedur.is xmlweather API.
 
     Copyright (c) 2019-2022 Miðeind ehf.
-    Original author: Sveinbjorn Thordarson
 
-    BSD 3-clause License (see License.txt).
+    BSD 3-clause License (see LICENSE.txt).
 
 """
 

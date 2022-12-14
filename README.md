@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 [![Release](https://shields.io/github/v/release/mideind/iceweather?display_name=tag)]()
+[![PyPI](https://img.shields.io/pypi/v/iceweather)]()
 [![Build](https://github.com/mideind/iceweather/actions/workflows/python-package.yml/badge.svg)]()
 
 `ìceweather` is a Python 3.7+ package for obtaining Icelandic weather information and forecasts from
@@ -98,7 +99,7 @@ Request a descriptive text from the weather API:
               'valid_to': '2019-09-14 00:00:00'}]}
 ```
 
-```
+```text
 Text types:
 
     "2" = "Veðurhorfur á landinu"

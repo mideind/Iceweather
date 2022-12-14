@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
     Scrape coordinates of all weather stations in Iceland from vedur.is
 """
