@@ -1,17 +1,17 @@
 # iceweather
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 [![Release](https://shields.io/github/v/release/mideind/iceweather?display_name=tag)]()
 [![Build](https://github.com/mideind/iceweather/actions/workflows/python-package.yml/badge.svg)]()
 
-`ìceweather` is a Python 3.6+ package for obtaining Icelandic weather information and forecasts from
+`ìceweather` is a Python 3.7+ package for obtaining Icelandic weather information and forecasts from
 the [Icelandic Met Office](https://en.vedur.is/) (*Veðurstofan*). Uses the xmlweather API ([documentation in Icelandic](https://vedur.is/um-vi/vefurinn/xml/)).
 
 ## Installation
 
-```
-$ pip install iceweather
+```sh
+pip install iceweather
 ```
 
 ## Examples
@@ -129,9 +129,10 @@ All functions accept the `lang` keyword parameter. Supported languages are `is` 
 
 ## Version History
 
-* 0.2.0 - Now uses the Icelandic Met Office's XML API directly instead apis.is (15/07/2021)
+* 0.2.1 - Updated weather station data. Now requires Python 3.7+ (2022-12-14)
+* 0.2.0 - Now uses the Icelandic Met Office's XML API directly instead apis.is (2021-07-15)
 * 0.1.1 - Fall back on other close weather stations for if err in result from closest station
-* 0.1.0 - Initial release (12/09/2019)
+* 0.1.0 - Initial release (2019-09-12)
 
 ## BSD License
 
@@ -161,4 +162,3 @@ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-
