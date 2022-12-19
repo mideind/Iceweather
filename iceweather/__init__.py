@@ -9,7 +9,19 @@
 
 """
 
-from .weather import *
+from .weather import (
+    observation_for_stations,
+    observation_for_station,
+    observation_for_stations,
+    forecast_for_stations,
+    forecast_for_station,
+    forecast_for_closest,
+    forecast_text,
+    station_list,
+    closest_stations,
+    id_for_station,
+    station_for_id,
+)
 
 __version__ = "0.3.0"
 __author__ = "Miðeind ehf."

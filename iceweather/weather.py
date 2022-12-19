@@ -19,49 +19,10 @@ import requests
 from requests import RequestException
 
 from .stations import STATIONS
-
+from .util import distance
 
 _DEFAULT_LANG: str = "is"
 _SUPPORTED_LANGS = frozenset(("is", "en"))
-
-_EARTH_RADIUS: float = 6371.0088  # Earth's radius in km
-
-
-def _distance(loc1: Tuple[float, float], loc2: Tuple[float, float]) -> float:
-    """
-    Calculate the Haversine distance.
-    Parameters
-    ----------
-    origin : tuple of float
-        (lat, long)
-    destination : tuple of float
-        (lat, long)
-    Returns
-    -------
-    distance_in_km : float
-    Examples
-    --------
-    >>> origin = (48.1372, 11.5756)  # Munich
-    >>> destination = (52.5186, 13.4083)  # Berlin
-    >>> round(distance(origin, destination), 1)
-    504.2
-    Source:
-    https://stackoverflow.com/questions/19412462
-        /getting-distance-between-two-points-based-on-latitude-longitude
-    """
-    (lat1, lon1) = loc1
-    (lat2, lon2) = loc2
-
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    slat = math.sin(dlat / 2)
-    slon = math.sin(dlon / 2)
-    a = (
-        slat * slat
-        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * slon * slon
-    )
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    return _EARTH_RADIUS * c
 
 
 _ArgType = Union[int, str, Iterable[Union[int, str]]]
@@ -134,7 +95,6 @@ def observation_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -
     'R'   : { 'is': 'Uppsöfnuð úrkoma (mm/klst) úr sjálfvirkum mælum',
               'en': 'Cumulative precipitation (mm/h) from automatic measuring units'}
     """
-
     assert lang in _SUPPORTED_LANGS
 
     ids = _arg_to_str_list(station_ids)
@@ -157,9 +117,9 @@ def observation_for_station(
 ) -> Dict:
     """Returns weather observations for the given station ID.
     Wrapper for observation_for_stations."""
-
     assert lang in _SUPPORTED_LANGS
     assert isinstance(station_id, (str, int))
+
     return observation_for_stations(station_id, lang)
 
 
@@ -167,8 +127,8 @@ def observation_for_closest(
     lat: float, lon: float, lang: str = _DEFAULT_LANG
 ) -> Tuple[Dict, Dict]:
     """Returns weather observation from closest weather station given coordinates."""
-
     assert lang in _SUPPORTED_LANGS
+
     station = closest_stations(lat, lon)[0]
     return observation_for_station(station["id"], lang=lang), station
 
@@ -181,7 +141,6 @@ _FORECASTS_URL: str = (
 
 def forecast_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> Dict:
     """Returns weather forecast from given weather station IDs."""
-
     assert lang in _SUPPORTED_LANGS
 
     ids = _arg_to_str_list(station_ids)
@@ -214,9 +173,9 @@ def forecast_for_station(
 ) -> Dict:
     """Returns weather forecast from given weather station ID.
     Wrapper for forecast_for_stations."""
-
     assert lang in _SUPPORTED_LANGS
     assert isinstance(station_id, (str, int))
+
     return forecast_for_stations(station_id, lang)
 
 
@@ -224,8 +183,8 @@ def forecast_for_closest(
     lat: float, lon: float, lang=_DEFAULT_LANG
 ) -> Tuple[Dict, Dict]:
     """Returns weather forecast from closest weather station given coordinates."""
-
     assert lang in _SUPPORTED_LANGS
+
     station = closest_stations(lat, lon)[0]
     return forecast_for_station(station["id"], lang=lang), station
 
@@ -281,22 +240,19 @@ def forecast_text(types: _ArgType) -> Dict:
 
 def station_list() -> List[Dict]:
     """Return a list of all weather stations in Iceland."""
-
     return STATIONS
 
 
 def closest_stations(lat: float, lon: float, limit: int = 1) -> List[Dict]:
     """Find the weather station closest to the given location."""
-
     dist_sorted = sorted(
-        STATIONS, key=lambda s: _distance((lat, lon), (s["lat"], s["lon"]))
+        STATIONS, key=lambda s: distance((lat, lon), (s["lat"], s["lon"]))
     )
     return dist_sorted[:limit]
 
 
 def id_for_station(station_name: str) -> Optional[int]:
     """Return the numerical ID for a weather station, given its name."""
-
     for s in STATIONS:
         if s["name"] == station_name:
             return s["id"]
@@ -305,7 +261,6 @@ def id_for_station(station_name: str) -> Optional[int]:
 
 def station_for_id(station_id: int) -> Optional[Dict]:
     """Return the name of a weather station, given its numerical ID."""
-
     for s in STATIONS:
         if s["id"] == station_id:
             return s

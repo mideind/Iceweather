@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
+
     Scrape coordinates of all weather stations in Iceland from vedur.is
+
 """
 
 import time
@@ -45,7 +47,9 @@ for s in samples:
 
     # Station ID
     td = s.find("td", string="Stöðvanúmer")
+    assert td
     tr = td.parent
+    assert tr
     tdloc = tr.find_all("td")[-1]
     loctxt = str(tdloc.find(text=True))
 
@@ -53,8 +57,9 @@ for s in samples:
 
     # Coordinates
     td = s.find("td", string="Staðsetning")
+    assert td
     tr = td.parent
-
+    assert tr
     tdloc = tr.find_all("td")[-1]
     loctxt = str(tdloc.find(text=True))
 
