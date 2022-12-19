@@ -198,10 +198,7 @@ def test_closest_stations():
     """Test closest station logic."""
     assert len(closest_stations(_RVK_COORDS[0], _RVK_COORDS[1])) == 1
     assert len(closest_stations(_RVK_COORDS[0], _RVK_COORDS[1], limit=3)) == 3
-    assert (
-        closest_stations(_RVK_COORDS[0], _RVK_COORDS[1])[0]["name"]
-        == "Reykjavík Hljómskálagarður"
-    )
+    assert "Reykjavík" in closest_stations(_RVK_COORDS[0], _RVK_COORDS[1])[0]["name"]
     assert (
         "Seltjarnarnes"
         in closest_stations(_SELTJ_COORDS[0], _SELTJ_COORDS[1])[0]["name"]

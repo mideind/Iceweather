@@ -10,7 +10,7 @@
 
 """
 
-from typing import Iterable, List, Tuple, Dict, Union, Optional
+from typing import Iterable, List, Tuple, Dict, Union, Optional, Any
 
 import xml.etree.ElementTree as ET
 import math
@@ -22,6 +22,7 @@ from .stations import STATIONS
 
 
 _DEFAULT_LANG: str = "is"
+_SUPPORTED_LANGS = frozenset(("is", "en"))
 
 _EARTH_RADIUS: float = 6371.0088  # Earth's radius in km
 
@@ -80,7 +81,7 @@ def _api_call(url: str) -> ET.Element:
     """Use requests to call the vedur.is weather API. Return XML tree."""
     result = requests.get(url)
     if result.status_code != 200:
-        raise RequestException(f"API status code not 200 OK for URL: {url}")
+        raise RequestException(f"API status code {result.status_code} for URL: {url}")
 
     # Remove HTML line breaks (which cause confusion in the XML parsing)
     t: str = re.sub(r"\s*(<br/>)+\s*", r" ", result.text)
@@ -95,7 +96,7 @@ _OBSERVATIONS_URL: str = (
 )
 
 
-def observation_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> dict:
+def observation_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> Dict:
     """
     Returns weather observations for the given station IDs.
     Keys in the resulting dictionary are the following:
@@ -133,12 +134,15 @@ def observation_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -
     'R'   : { 'is': 'Uppsöfnuð úrkoma (mm/klst) úr sjálfvirkum mælum',
               'en': 'Cumulative precipitation (mm/h) from automatic measuring units'}
     """
+
+    assert lang in _SUPPORTED_LANGS
+
     ids = _arg_to_str_list(station_ids)
     x_tree = _api_call(_OBSERVATIONS_URL.format(lang, ";".join(ids)))
-    ret_data: Dict[str, List[dict]] = {"results": []}
+    ret_data: Dict[str, List[Dict]] = {"results": []}
 
     for station in x_tree:
-        station_dict: dict = {**station.attrib}
+        station_dict: Dict = {**station.attrib}
 
         for node in station:
             station_dict[node.tag] = node.text or ""
@@ -150,19 +154,21 @@ def observation_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -
 
 def observation_for_station(
     station_id: Union[str, int], lang: str = _DEFAULT_LANG
-) -> dict:
-    """
-    Returns weather observations for the given station ID.
-    Wrapper for observation_for_stations.
-    """
+) -> Dict:
+    """Returns weather observations for the given station ID.
+    Wrapper for observation_for_stations."""
+
+    assert lang in _SUPPORTED_LANGS
     assert isinstance(station_id, (str, int))
     return observation_for_stations(station_id, lang)
 
 
 def observation_for_closest(
     lat: float, lon: float, lang: str = _DEFAULT_LANG
-) -> Tuple[dict, dict]:
+) -> Tuple[Dict, Dict]:
     """Returns weather observation from closest weather station given coordinates."""
+
+    assert lang in _SUPPORTED_LANGS
     station = closest_stations(lat, lon)[0]
     return observation_for_station(station["id"], lang=lang), station
 
@@ -176,13 +182,15 @@ _FORECASTS_URL: str = (
 def forecast_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> Dict:
     """Returns weather forecast from given weather station IDs."""
 
+    assert lang in _SUPPORTED_LANGS
+
     ids = _arg_to_str_list(station_ids)
     x_tree = _api_call(_FORECASTS_URL.format(lang, ";".join(ids)))
 
-    ret_data: Dict[str, List[dict]] = {"results": []}
+    ret_data: Dict[str, List[Dict]] = {"results": []}
 
     for station in x_tree:
-        station_dict: dict = {**station.attrib, "forecast": []}
+        station_dict: Dict[str, Any] = {**station.attrib, "forecast": []}
 
         for node in station:
             if node.tag == "forecast":
@@ -204,10 +212,10 @@ def forecast_for_stations(station_ids: _ArgType, lang: str = _DEFAULT_LANG) -> D
 def forecast_for_station(
     station_id: Union[str, int], lang: str = _DEFAULT_LANG
 ) -> Dict:
-    """
-    Returns weather forecast from given weather station ID.
-    Wrapper for forecast_for_stations.
-    """
+    """Returns weather forecast from given weather station ID.
+    Wrapper for forecast_for_stations."""
+
+    assert lang in _SUPPORTED_LANGS
     assert isinstance(station_id, (str, int))
     return forecast_for_stations(station_id, lang)
 
@@ -216,6 +224,8 @@ def forecast_for_closest(
     lat: float, lon: float, lang=_DEFAULT_LANG
 ) -> Tuple[Dict, Dict]:
     """Returns weather forecast from closest weather station given coordinates."""
+
+    assert lang in _SUPPORTED_LANGS
     station = closest_stations(lat, lon)[0]
     return forecast_for_station(station["id"], lang=lang), station
 
@@ -224,8 +234,7 @@ _TEXT_URL = "https://xmlweather.vedur.is?op_w=xml&type=txt&lang=is&view=xml&ids=
 
 
 def forecast_text(types: _ArgType) -> Dict:
-    """
-    Request a descriptive text from the weather API.
+    """Request a descriptive text from the weather API.
 
     Text types:
 
@@ -252,11 +261,12 @@ def forecast_text(types: _ArgType) -> Dict:
     "39" = "Suðausturland"
     "42" = "General synopsis
     """
+
     t = _arg_to_str_list(types)
 
     x_tree = _api_call(_TEXT_URL.format(";".join(t)))
 
-    ret_data: Dict[str, List[dict]] = {"results": []}
+    ret_data: Dict[str, List[Dict]] = {"results": []}
 
     for text in x_tree:
         text_dict = {**text.attrib}
@@ -271,20 +281,22 @@ def forecast_text(types: _ArgType) -> Dict:
 
 def station_list() -> List[Dict]:
     """Return a list of all weather stations in Iceland."""
+
     return STATIONS
 
 
 def closest_stations(lat: float, lon: float, limit: int = 1) -> List[Dict]:
     """Find the weather station closest to the given location."""
+
     dist_sorted = sorted(
         STATIONS, key=lambda s: _distance((lat, lon), (s["lat"], s["lon"]))
     )
-
     return dist_sorted[:limit]
 
 
 def id_for_station(station_name: str) -> Optional[int]:
     """Return the numerical ID for a weather station, given its name."""
+
     for s in STATIONS:
         if s["name"] == station_name:
             return s["id"]
@@ -293,6 +305,7 @@ def id_for_station(station_name: str) -> Optional[int]:
 
 def station_for_id(station_id: int) -> Optional[Dict]:
     """Return the name of a weather station, given its numerical ID."""
+
     for s in STATIONS:
         if s["id"] == station_id:
             return s
