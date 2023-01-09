@@ -25,7 +25,7 @@ from .weather import (
     STATIONS,
 )
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 __author__ = "Miðeind ehf."
 __copyright__ = "(C) 2022 Miðeind ehf."
 __license__ = "BSD 3-clause License"
