@@ -124,13 +124,19 @@ def observation_for_station(
 
 
 def observation_for_closest(
-    lat: float, lon: float, lang: str = _DEFAULT_LANG
+    lat: float, lon: float, lang: str = _DEFAULT_LANG, num_stations_to_try: int = 3
 ) -> Tuple[Dict, Dict]:
-    """Returns weather observation from closest weather station given coordinates."""
+    """Returns weather observation from closest weather station given coordinates.
+    Tries up to num_stations_to_try stations, returns the first one that works."""
     assert lang in _SUPPORTED_LANGS
 
-    station = closest_stations(lat, lon)[0]
-    return observation_for_station(station["id"], lang=lang), station
+    stations = closest_stations(lat, lon, limit=num_stations_to_try)
+    for s in stations:
+        print(f"Trying {s['name']}")
+        o = observation_for_station(s["id"], lang=lang)
+        if o["results"] and not o["results"][0].get("err") and o["results"][0]["valid"]:
+            return o, s
+    return observation_for_station(stations[0]["id"], lang=lang), stations[0]
 
 
 _FORECASTS_URL: str = (
@@ -180,13 +186,19 @@ def forecast_for_station(
 
 
 def forecast_for_closest(
-    lat: float, lon: float, lang=_DEFAULT_LANG
+    lat: float, lon: float, lang=_DEFAULT_LANG, num_stations_to_try: int = 3
 ) -> Tuple[Dict, Dict]:
     """Returns weather forecast from closest weather station given coordinates."""
     assert lang in _SUPPORTED_LANGS
 
-    station = closest_stations(lat, lon)[0]
-    return forecast_for_station(station["id"], lang=lang), station
+    stations = closest_stations(lat, lon, limit=num_stations_to_try)
+    for s in stations:
+        print(f"Trying {s['name']}")
+        o = forecast_for_station(s["id"], lang=lang)
+        if o["results"] and not o["results"][0].get("err") and o["results"][0]["valid"]:
+            return o, s
+
+    return forecast_for_station(stations[0]["id"], lang=lang), stations[0]
 
 
 _TEXT_URL = "https://xmlweather.vedur.is?op_w=xml&type=txt&lang=is&view=xml&ids={0}"

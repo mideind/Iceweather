@@ -158,7 +158,7 @@ def test_forecast_for_station():
 def test_forecast_text():
     """Test descriptive text endpoint."""
 
-    def _check_forc_text(types):
+    def _check_forec_text(types):
         forc_text = forecast_text(types)
         assert (
             "results" in forc_text
@@ -204,10 +204,10 @@ def test_forecast_text():
     }
 
     for t in all_types:
-        _check_forc_text(t)
+        _check_forec_text(t)
 
-    _check_forc_text(("2", "3", "5", "6"))
-    _check_forc_text(("2", "37", "31", "42"))
+    _check_forec_text(("2", "3", "5", "6"))
+    _check_forec_text(("2", "37", "31", "42"))
 
 
 def test_closest_stations():

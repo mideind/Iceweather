@@ -18,7 +18,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="iceweather",
-    version="0.3.0",
+    version="0.2.2",
     author="Miðeind ehf.",
     author_email="mideind@mideind.is",
     license="BSD",

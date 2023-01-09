@@ -13,6 +13,7 @@ from .weather import (
     observation_for_stations,
     observation_for_station,
     observation_for_stations,
+    observation_for_closest,
     forecast_for_stations,
     forecast_for_station,
     forecast_for_closest,
@@ -24,7 +25,7 @@ from .weather import (
     STATIONS,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.2.2"
 __author__ = "Miðeind ehf."
 __copyright__ = "(C) 2022 Miðeind ehf."
 __license__ = "BSD 3-clause License"

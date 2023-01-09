@@ -130,6 +130,7 @@ All functions accept the `lang` keyword parameter. Supported languages are `is` 
 
 ## Version History
 
+* 0.2.2 - `*_for_closest` functions now fall back on other close stations if first fails (2023-01-09)
 * 0.2.1 - Updated weather station data. Now requires Python 3.7+ (2022-12-14)
 * 0.2.0 - Now uses the Icelandic Met Office's XML API directly instead apis.is (2021-07-15)
 * 0.1.1 - Fall back on other close weather stations for if err in result from closest station
