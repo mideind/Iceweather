@@ -1,6 +1,13 @@
 """
 
-    test_iceweather.py
+    iceweather: Look up information about Icelandic weather (observations, forecasts,
+    human readable descriptive texts, etc.) using vedur.is xmlweather API.
+
+    Copyright (c) 2019-2023 Miðeind ehf.
+    Original author: Sveinbjorn Thordarson
+
+    BSD 3-clause License (see License.txt).
+
 
     Tests for iceweather package
 
@@ -18,19 +25,28 @@ def test_iceweather():
 
     # Check integrity of station data
     for s in STATIONS:
+        assert s and isinstance(s, dict)
         assert "id" in s and isinstance(s["id"], int)
         assert "name" in s and isinstance(s["name"], str)
         s_name = s["name"]
         assert "lat" in s and isinstance(s["lat"], float)
         assert "lon" in s and isinstance(s["lon"], float)
         # Also check lookup functions
-        assert station_for_id(s["id"])["name"] == s_name
+        s4id = station_for_id(s["id"])
+        assert s4id and isinstance(s4id, dict)
+        assert s4id["name"] == s_name
         # (Some stations have the same name, this test circumvents that issue)
-        assert station_for_id(id_for_station(s_name))["name"] == s_name
+        i4s = id_for_station(s_name)
+        assert i4s is not None
+        s4id2 = station_for_id(i4s)
+        assert s4id2 and isinstance(s4id2, dict)
+        assert s4id2["name"] == s_name
 
     # Check Reykjavík specifically
     assert id_for_station("Reykjavík") == 1
-    assert station_for_id(1)["name"] == "Reykjavík"
+    s = station_for_id(1)
+    assert s and isinstance(s, dict)
+    assert s["name"] == "Reykjavík"
 
 
 def test_observation_for_station():

@@ -3,7 +3,7 @@
     iceweather: Look up information about Icelandic weather (observations, forecasts,
     human readable descriptive texts, etc.) using vedur.is xmlweather API.
 
-    Copyright (c) 2019-2022 Miðeind ehf.
+    Copyright (c) 2019-2023 Miðeind ehf.
 
     BSD 3-clause License (see LICENSE.txt).
 
@@ -21,6 +21,7 @@ from .weather import (
     closest_stations,
     id_for_station,
     station_for_id,
+    STATIONS,
 )
 
 __version__ = "0.3.0"

@@ -3,7 +3,7 @@
     iceweather: Look up information about Icelandic weather (observations, forecasts,
     human readable descriptive texts, etc.) using vedur.is xmlweather API.
 
-    Copyright (c) 2019-2022 Miðeind ehf.
+    Copyright (c) 2019-2023 Miðeind ehf.
     Original author: Sveinbjorn Thordarson
 
     BSD 3-clause License (see License.txt).
@@ -221,7 +221,7 @@ STATIONS: List[Dict] = [
     {"id": 1470, "lat": 64.1288, "lon": -21.9082, "name": "Reykjavík Háahlíð"},
     {"id": 1469, "lat": 64.1411, "lon": -21.9436, "name": "Reykjavík Hljómskálagarður"},
     {"id": 1482, "lat": 64.1035, "lon": -21.7971, "name": "Reykjavík Víðidalur"},
-    # {"id": 1477, "lat": 64.1284, "lon": -21.9407, "name": "Reykjavíkurflugvöllur"},
+    {"id": 1477, "lat": 64.1284, "lon": -21.9407, "name": "Reykjavíkurflugvöllur"},
     {"id": 36049, "lat": 63.4521, "lon": -19.0378, "name": "Reynisfjall"},
     {"id": 4921, "lat": 66.5115, "lon": -16.1441, "name": "Rif á Melrakkasléttu"},
     {"id": 6975, "lat": 64.933, "lon": -17.983, "name": "Sandbúðir"},

@@ -3,14 +3,14 @@
     iceweather: Look up information about Icelandic weather (observations, forecasts,
     human readable descriptive texts, etc.) using vedur.is xmlweather API.
 
-    Copyright (c) 2019-2022 Miðeind ehf.
+    Copyright (c) 2019-2023 Miðeind ehf.
     Original author: Sveinbjorn Thordarson
 
     BSD 3-clause License (see License.txt).
 
 """
 
-from typing import Iterable, List, Tuple, Dict, Union, Optional, Any
+from typing import Iterable, List, Tuple, Dict, Union, Optional, Any, FrozenSet
 
 import xml.etree.ElementTree as ET
 import math
@@ -22,7 +22,7 @@ from .stations import STATIONS
 from .util import distance
 
 _DEFAULT_LANG: str = "is"
-_SUPPORTED_LANGS = frozenset(("is", "en"))
+_SUPPORTED_LANGS: FrozenSet[str] = frozenset(("is", "en"))
 
 
 _ArgType = Union[int, str, Iterable[Union[int, str]]]
