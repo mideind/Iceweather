@@ -132,7 +132,6 @@ def observation_for_closest(
 
     stations = closest_stations(lat, lon, limit=num_stations_to_try)
     for s in stations:
-        print(f"Trying {s['name']}")
         o = observation_for_station(s["id"], lang=lang)
         if o["results"] and not o["results"][0].get("err") and o["results"][0]["valid"]:
             return o, s
@@ -193,7 +192,6 @@ def forecast_for_closest(
 
     stations = closest_stations(lat, lon, limit=num_stations_to_try)
     for s in stations:
-        print(f"Trying {s['name']}")
         o = forecast_for_station(s["id"], lang=lang)
         if o["results"] and not o["results"][0].get("err") and o["results"][0]["valid"]:
             return o, s
